@@ -91,74 +91,10 @@ lower = re.compile(r'^([a-z]|_)*$')
 lower_colon = re.compile(r'^([a-z]|_)*:([a-z]|_)*$')
 problemchars = re.compile(r'[=\+/&<>;\'"\?%#$@\,\. \t\r\n]')
 
-CREATED = [ "version", "changeset", "timestamp", "user", "uid"]
-
-
-def shape_element(element):
-    node = {}
-    if element.tag == "node" or element.tag == "way" :
-        # YOUR CODE HERE
-        if element.tag == "node":
-            node["pos"] = []
-            node["pos"].append(float(element.get("lat")))
-            node["pos"].append(float(element.get("lon")))
-            node["type"] = "node"
-        else:
-            node["type"] = "way"
-        for k in element.keys():
-            if k in CREATED:
-                if "created" not in node:
-                    node["created"] = {}
-                node["created"][k] = element.get(k)
-            elif k not in ["lat", "lon"]:
-                node[k] = element.get(k)
-                
-        for e in element.iter():
-            if e.tag == "tag":
-                k_value = e.get("k")
-                v_value = e.get("v")
-                if re.search(problemchars, k_value):
-                    continue
-                m = re.search(lower_colon, k_value)
-                if m:
-                    splits = k_value.split(":")
-                    if k_value.startswith("addr:"):
-                        if "address" not in node:
-                            node["address"] = {}
-                        node["address"][splits[1]] = v_value
-                else:
-                    node[k_value] = v_value
-            if e.tag == "nd":
-                if "node_refs" not in node:
-                    node["node_refs"] = []
-                node["node_refs"].append(e.get("ref"))
-        return node
-    else:
-        return None
-
-
-def process_map(file_in, pretty = False):
-    # You do not need to change this file
-    file_out = "{0}.json".format(file_in)
-    #data = []
-    with codecs.open(file_out, "w") as fo:
-        #context = ET.iterparse(file_in)
-        #context = iter(context)
-        #event,root = context.next()
-        for _, element in ET.iterparse(file_in):
-        #for event, element in context:
-            el = shape_element(element)
-            if el:
-                #data.append(el)
-                if pretty:
-                    fo.write(json.dumps(el, indent=2)+"\n")
-                else:
-                    fo.write(json.dumps(el) + "\n")
-            if element.tag == "node" or element.tag == "way":
-                element.clear()
-
+CREATED = ["version", "changeset", "timestamp", "user", "uid"]
 MAP_AMENITY = {"clinic":"doctors", "pub":"bar"}
-def shape_element_clean(element):
+
+def shape_element(element, isClean):
     node = {}
     if element.tag == "node" or element.tag == "way" :
         # YOUR CODE HERE
@@ -189,10 +125,17 @@ def shape_element_clean(element):
                     if k_value.startswith("addr:"):
                         if "address" not in node:
                             node["address"] = {}
+			if isClean:
+			    if splits[1] == "postcode":
+			    	v_value = "".join(v_value.split()) # removes spaces
+				if len(v_value) != 6 or not v_value.isdigit():
+				    continue
                         node["address"][splits[1]] = v_value
-		    if splits[1] == "postcode":
-		    	v_value = "".join(v_value
                 else:
+                    if isClean and k_value == "amenity":
+	                v_value = v_value.lower()
+		        if v_value in MAP_AMENITY:
+		            v_value = MAP_AMENITY[v_value]
                     node[k_value] = v_value
             if e.tag == "nd":
                 if "node_refs" not in node:
@@ -201,7 +144,9 @@ def shape_element_clean(element):
         return node
     else:
         return None
-def process_map_clean(file_in, pretty = False):
+
+
+def process_map(file_in, isClean = False, pretty = False):
     # You do not need to change this file
     file_out = "{0}.json".format(file_in)
     #data = []
@@ -211,7 +156,7 @@ def process_map_clean(file_in, pretty = False):
         #event,root = context.next()
         for _, element in ET.iterparse(file_in):
         #for event, element in context:
-            el = shape_element_clean(element)
+            el = shape_element(element, isClean)
             if el:
                 #data.append(el)
                 if pretty:
@@ -220,3 +165,4 @@ def process_map_clean(file_in, pretty = False):
                     fo.write(json.dumps(el) + "\n")
             if element.tag == "node" or element.tag == "way":
                 element.clear()
+
