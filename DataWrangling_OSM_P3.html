@@ -283,7 +283,16 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 
 <pre><code>- Non numeric character
 - Contains spaces between digits
-- Contains less or more than six digits</code></pre>
+- Contains less or more than six digits  
+
+</code></pre>
+<p>Some of examples of faulty postal codes present in database are:-</p>
+<ul>
+<li>2242</li>
+<li>Sunpat House Village</li>
+<li>sdf</li>
+<li>110 001</li>
+</ul>
 
 </div>
 </div>
@@ -304,7 +313,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="n">db</span><span class="o">.</span><span class="n">delhi</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s">&quot;amenity&quot;</span><span class="p">:</span><span class="s">&quot;bar&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
@@ -318,7 +327,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[7]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[4]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -333,7 +342,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># pub and bar could be merged</span>
@@ -348,7 +357,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[8]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[5]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -377,7 +386,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># amenities with name not specified</span>
@@ -421,6 +430,22 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Inconsistency-in-abbreviation-of-&quot;Government&quot;-in-name-of-amenities">Inconsistency in abbreviation of "Government" in name of amenities<a class="anchor-link" href="#Inconsistency-in-abbreviation-of-&quot;Government&quot;-in-name-of-amenities">&#182;</a></h4><p>We found that in name of Governement amenities abbreviation of "Government" is non standard e.g. following are some of different abbreviatio used.</p>
+<ul>
+<li>Govt.</li>
+<li>Govt</li>
+<li>govt</li>
+<li>govt.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Data-Cleaning">Data Cleaning<a class="anchor-link" href="#Data-Cleaning">&#182;</a></h2>
 </div>
 </div>
@@ -432,9 +457,13 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We solved some of problems with data programatically like</p>
 <ul>
-<li>removed invalid postal code with non-numeric characters and not adhering to specified number of digits.</li>
+<li>removed invalid postal code with non-numeric characters and not adhering to specified number of digits.<ul>
+<li>We made sure that our postal code of Delhi is a 6 digit number by regular expression r'^\d{6}$'</li>
+</ul>
+</li>
 <li>removed white spaces with otherwise valid postal code.</li>
 <li>mapped some of amenities to unified glossary like changing clinic to doctors and pub to bar.</li>
+<li>Used a common abbereviation in "Government" named amenities.</li>
 </ul>
 
 </div>
@@ -442,7 +471,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># extracting new cleaned-data.</span>
@@ -485,7 +514,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="kn">import</span> <span class="nn">os</span>
@@ -500,7 +529,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[15]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[8]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -525,7 +554,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># Number of documents</span>
@@ -540,7 +569,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[16]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[9]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -555,7 +584,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># Number of nodes</span>
@@ -570,7 +599,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[17]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[10]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -585,7 +614,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c">#number of ways</span>
@@ -600,7 +629,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[18]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[11]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -615,7 +644,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># number of unique users</span>
@@ -630,7 +659,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[19]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[12]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -645,7 +674,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># Top 5 contributing users</span>
@@ -678,7 +707,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># numbers of users appearing only once</span>
@@ -709,7 +738,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># top 10 appearing amenities</span>
@@ -750,7 +779,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># Numbers of historic sites</span>
@@ -790,7 +819,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># Number of tourism attractions</span>
@@ -805,7 +834,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[24]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[17]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -820,7 +849,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># Numbers of historic tourism attractions</span>
@@ -849,7 +878,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># Numbers of schools</span>
@@ -864,7 +893,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[26]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[19]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -879,7 +908,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># Top 10 school names</span>
@@ -902,14 +931,14 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>[{u&apos;_id&apos;: None, u&apos;count&apos;: 499},
  {u&apos;_id&apos;: u&apos;Delhi Public School&apos;, u&apos;count&apos;: 7},
- {u&apos;_id&apos;: u&apos;Government School&apos;, u&apos;count&apos;: 5},
  {u&apos;_id&apos;: u&apos;Kendriya Vidyalaya&apos;, u&apos;count&apos;: 5},
- {u&apos;_id&apos;: u&apos;Manav Sthali School&apos;, u&apos;count&apos;: 3},
+ {u&apos;_id&apos;: u&apos;Government School&apos;, u&apos;count&apos;: 5},
  {u&apos;_id&apos;: u&apos;Ryan International School&apos;, u&apos;count&apos;: 3},
  {u&apos;_id&apos;: u&apos;Modern School&apos;, u&apos;count&apos;: 3},
  {u&apos;_id&apos;: u&apos;Salwan Public School&apos;, u&apos;count&apos;: 3},
- {u&apos;_id&apos;: u&apos;Sarvodaya Vidyalaya&apos;, u&apos;count&apos;: 2},
- {u&apos;_id&apos;: u&apos;Kerala School&apos;, u&apos;count&apos;: 2}]
+ {u&apos;_id&apos;: u&apos;Manav Sthali School&apos;, u&apos;count&apos;: 3},
+ {u&apos;_id&apos;: u&apos;DAV School&apos;, u&apos;count&apos;: 2},
+ {u&apos;_id&apos;: u&apos;Blind School&apos;, u&apos;count&apos;: 2}]
 </pre>
 </div>
 </div>
@@ -920,7 +949,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># Number of universities</span>
@@ -935,7 +964,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[28]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[21]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -950,7 +979,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># Number of colleges</span>
@@ -965,7 +994,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[29]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[22]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -980,7 +1009,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># Number of embassy</span>
@@ -995,7 +1024,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[30]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[23]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -1010,7 +1039,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># Top religions</span>
@@ -1059,7 +1088,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[32]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># places of worship that are tourist attractions</span>
@@ -1091,7 +1120,7 @@ mongoimport.exe --db test --collection delhi --file <filepath>/new-delhi_india.j
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[33]:</div>
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span class="c"># Popular cuisine resaurants</span>
