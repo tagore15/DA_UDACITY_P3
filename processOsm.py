@@ -93,15 +93,21 @@ problemchars = re.compile(r'[=\+/&<>;\'"\?%#$@\,\. \t\r\n]')
 
 CREATED = ["version", "changeset", "timestamp", "user", "uid"]
 MAP_AMENITY = {"clinic":"doctors", "pub":"bar"}
+GOVERNMENT_ABBR_LIST = ["Govt.", "Govt", "Govr" ]
 
 def shape_element(element, isClean):
+    """ parses xml element and creates JSON """
     node = {}
     if element.tag == "node" or element.tag == "way" :
         # YOUR CODE HERE
         if element.tag == "node":
             node["pos"] = []
-            node["pos"].append(float(element.get("lat")))
-            node["pos"].append(float(element.get("lon")))
+	    lat = element.get("lat")
+	    lon = element.get("lon")
+	    if lat:
+            	node["pos"].append(float(lat))
+	    if lon:
+            	node["pos"].append(float(lon))
             node["type"] = "node"
         else:
             node["type"] = "way"
@@ -127,15 +133,19 @@ def shape_element(element, isClean):
                             node["address"] = {}
 			if isClean:
 			    if splits[1] == "postcode":
-			    	v_value = "".join(v_value.split()) # removes spaces
-				if len(v_value) != 6 or not v_value.isdigit():
-				    continue
+			    	v_value = re.sub(" ", "", v_value) # removes spaces
+				# check if it is a 6 digit numerical code				
+				if not re.match(r'^\d{6}$', v_value): 
+			            continue
                         node["address"][splits[1]] = v_value
                 else:
                     if isClean and k_value == "amenity":
 	                v_value = v_value.lower()
 		        if v_value in MAP_AMENITY:
 		            v_value = MAP_AMENITY[v_value]
+		    if isClean and k_value == "name":
+		    	for g in GOVERNMENT_ABBR_LIST:
+                            v_value = re.sub(g, "Government", v_value, flags = re.I) 
                     node[k_value] = v_value
             if e.tag == "nd":
                 if "node_refs" not in node:
@@ -147,6 +157,7 @@ def shape_element(element, isClean):
 
 
 def process_map(file_in, isClean = False, pretty = False):
+    """ read files to parse all top level xml elements and dump in a json file """
     # You do not need to change this file
     file_out = "{0}.json".format(file_in)
     #data = []
@@ -165,4 +176,5 @@ def process_map(file_in, isClean = False, pretty = False):
                     fo.write(json.dumps(el) + "\n")
             if element.tag == "node" or element.tag == "way":
                 element.clear()
+
 
